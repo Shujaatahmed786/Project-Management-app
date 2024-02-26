@@ -58,7 +58,8 @@ const App = () => {
     setProjectState((prevState) => {
       return {
         ...prevState,
-        selectedProjectId: prevState.projects.filter((project) => project.id !== prevState.selectedProjectId),
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter((project) => project.id !== prevState.selectedProjectId),
       };
     });
   }
