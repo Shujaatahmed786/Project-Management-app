@@ -8,7 +8,37 @@ const App = () => {
   const [projectState, setProjectState] = useState({
     selectedProjectId: undefined,
     projects: [],
+    tasks: []
   });
+
+  function handleAddTask(text){
+    setProjectState((prevState) => {
+      const taskId = Math.random();
+      const newTask = {
+        text: text,
+                id: taskId,
+      };
+
+      return {
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks]
+      };
+    });
+
+  }
+
+  function handleDeleteTask(id){
+    setProjectState((prevState) =>{
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        tasks: prevState.projects.filter(
+          (task) => task.id !== id,
+        )
+      }
+    })
+
+  }
 
   function handleStartAddProject() {
     setProjectState((prevState) => {
@@ -66,7 +96,14 @@ const App = () => {
 
   const selectedProject = projectState.projects.find(project => project.id === projectState.selectedProjectId);
 
-  let content = <SelectedProject project={selectedProject} onDelete={handleDeleteProject}/>;
+  let content = <SelectedProject 
+  project={selectedProject} 
+  onDelete={handleDeleteProject}
+  onAddTask={handleAddTask}
+  onDeleteTask={handleDeleteTask}
+  tasks={projectState.tasks}
+
+  />;
   if (projectState.selectedProjectId === null) {
     content = <NewProject onAdd={handleAddProject} onCancel={handleCancelProject} />;
   } else if (projectState.selectedProjectId === undefined) {
@@ -77,7 +114,9 @@ const App = () => {
     <div className='h-screen my-8 flex gap-8'>
       <ProjectSidebar onStartAddProject={handleStartAddProject} 
       projects={projectState.projects}
-      onSelectProject={handleSelectProject} />
+      onSelectProject={handleSelectProject} 
+      selectedProject={projectState.selectedProjectId}
+      />
       {content}
     </div>
   );
